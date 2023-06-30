@@ -30,7 +30,7 @@ npm install
 
 # Start the app
 npm start
-
+```
 
 ## Future Improvements
 
