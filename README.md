@@ -30,6 +30,14 @@ npm install
 
 # Start the app
 npm start
+```
+
+## Future Improvements
+
+- Task editing feature.
+- User authentication.
+- Due date for tasks.
+- Prioritization of tasks.
 
 
 ## Future Improvements
