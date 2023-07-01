@@ -34,7 +34,7 @@ npm start
 
 ## Future Improvements
 
-- Task editing feature.
+- Task editing feature. (done)
 - User authentication.
 - Due date for tasks.
 - Prioritization of tasks.
