@@ -39,10 +39,3 @@ npm start
 - Due date for tasks.
 - Prioritization of tasks.
 
-
-## Future Improvements
-
-- Task editing feature.
-- User authentication.
-- Due date for tasks.
-- Prioritization of tasks.
