@@ -56,6 +56,17 @@ app.post('/todos/add', (req, res) => {
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
+app.post('/todos/update/:id', (req, res) => {
+    Todo.findById(req.params.id)
+        .then(todo => {
+            todo.task = req.body.task;
+
+            todo.save()
+                .then(() => res.json('Todo updated.'))
+                .catch(err => res.status(400).json('Error: ' + err));
+        })
+        .catch(err => res.status(400).json('Error: ' + err));
+});
 
 app.delete('/todos/:id', (req, res) => {
     Todo.findByIdAndDelete(req.params.id)
