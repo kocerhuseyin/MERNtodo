@@ -7,6 +7,8 @@ function App() {
   const [task, setTask] = useState('');
   const [editId, setEditId] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [editTask, setEditTask] = useState('');
+
 
   useEffect(() => {
     axios.get('http://localhost:5000/todos/')
@@ -15,6 +17,7 @@ function App() {
   }, []);
 
   const onChangeTask = (e) => setTask(e.target.value);
+  const onChangeEditTask = (e) => setEditTask(e.target.value);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -25,11 +28,8 @@ function App() {
 
     axios.post('http://localhost:5000/todos/add', todo)
       .then(res => {
-        setTodos([...todos, {
-          _id: res.data._id,
-          task: todo.task,
-          date: new Date().toISOString()
-        }])
+        const newTask = { _id: res.data._id, task: todo.task, createdAt: new Date().toISOString() };
+        setTodos([...todos, newTask]);
         console.log(res.data);
       });
 
@@ -46,29 +46,33 @@ function App() {
     setEditId(id);
     setIsEditing(true);
     const todoToEdit = todos.find((todo) => todo._id === id);
-    setTask(todoToEdit.task);
+    setEditTask(todoToEdit.task);
   };
 
   const updateTodo = (e) => {
     e.preventDefault();
     axios
       .post("http://localhost:5000/todos/update/" + editId, {
-        task: task,
+        task: editTask,
       })
       .then((res) => {
         console.log(res.data);
+
+        setTodos(todos.map(todo =>
+          todo._id === editId
+            ? { ...todo, task: editTask, createdAt: res.data.createdAt }
+            : todo
+        ));
+
         setIsEditing(false);
-        setTask("");
+        setEditTask("");
         setEditId(null);
-        // refresh the todos list
-        axios.get('http://localhost:5000/todos/')
-          .then(response => setTodos(response.data))
-          .catch((error) => console.log(error));
+
       });
   };
 
   const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" };
+    const options = { year: "numeric", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" };
     return new Date(dateString).toLocaleDateString(undefined, options);
   }
 
@@ -88,13 +92,13 @@ function App() {
             {editId === todo._id && isEditing ? (
               <input
                 type="text"
-                value={task}
-                onChange={onChangeTask}
+                value={editTask}
+                onChange={onChangeEditTask}
               />
             ) : (
               <span>{todo.task}</span>
             )}
-            <p>{formatDate(todo.createdAt)}</p>
+            <p>Created At: {formatDate(todo.createdAt)}</p>
           </div>
           {editId === todo._id && isEditing ? (
             <button onClick={updateTodo}>Update Task</button>

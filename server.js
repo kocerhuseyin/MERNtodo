@@ -8,7 +8,7 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect('CONNECTION STRING HERE', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb+srv://husolel:bCyjNMBYa3kXuLee@todoapp.kwi13sn.mongodb.net/', { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('Database Connected Successfully'))
     .catch(err => console.log(err));
 
@@ -62,7 +62,7 @@ app.post('/todos/update/:id', (req, res) => {
             todo.task = req.body.task;
 
             todo.save()
-                .then(() => res.json('Todo updated.'))
+                .then(() => res.json({ _id: todo._id, task: todo.task, createdAt: todo.createdAt.toISOString() }))
                 .catch(err => res.status(400).json('Error: ' + err));
         })
         .catch(err => res.status(400).json('Error: ' + err));
